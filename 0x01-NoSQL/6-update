@@ -1,0 +1,4 @@
+// update
+
+db.school.update({"name":"Holberton school"}, {$set:{"address":"72 Mission street"}}, 
+{multi:true})
