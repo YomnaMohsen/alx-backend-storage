@@ -13,7 +13,7 @@ if __name__ == "__main__":
     patch_logs = t_logs.count_documents({"method": "PATCH"})
     delete_logs = t_logs.count_documents({"method": "DELETE"})
     st_logs = t_logs.count_documents({"method": "GET", "path": "/status"})
-    print("{} logs \n Methods: \n \t method GET: {} \n \t method POST: {} \n \t method"
-           "PUT: {} \n \t method PATCH: {} \n \t method DELETE: {}"
+    print("{} logs\n Methods:\n \t method GET: {}\n \t method POST: {}\n \t method"
+           "PUT: {}\n \t method PATCH: {}\n \t method DELETE: {}"
           "\n {} status check".format(count_logs, get_logs, post_logs, put_logs, patch_logs, 
                                       delete_logs, st_logs))
