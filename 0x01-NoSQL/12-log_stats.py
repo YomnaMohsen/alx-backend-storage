@@ -8,7 +8,7 @@ if __name__ == "__main__":
     t_logs = client.logs.nginx
     count_logs = t_logs.count_documents({})
     print(f"{count_logs} logs")
-    print("Methods")
+    print("Methods:")
     get_logs = t_logs.count_documents({"method": "GET"})
     print(f"\tmethod GET: {get_logs}")
     post_logs = t_logs.count_documents({"method": "POST"})
