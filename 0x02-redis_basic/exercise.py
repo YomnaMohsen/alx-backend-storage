@@ -9,8 +9,8 @@ class Cache:
     """Cache class"""
     def __init__(self) -> None:
         """initialize redis client"""
-        __redis = redis.Redis()
-        __redis.flushdb()
+        self.__redis = redis.Redis()
+        self.__redis.flushdb()
 
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """takes data as arg and store it with key generated
