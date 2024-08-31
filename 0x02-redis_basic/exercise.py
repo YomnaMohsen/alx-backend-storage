@@ -5,7 +5,21 @@ from typing import Union, Callable
 import uuid
 from functools import wraps
 
-
+def call_history(method: Callable) -> Callable:
+    """store the history of inputs and 
+    outputs for a particular function"""
+    key = method.__qualname__
+    key_input = key + ":inputs"
+    key_output = key + ":outputs"
+    
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        data = method(self, *args, **kwargs)
+        
+        self._redis.rpush(key_input, str(args))
+        self._redis.rpush(key_output, data)
+        return data
+    return wrapper
 
 def count_calls(method: Callable) -> Callable:
     """decorator that takes a single method
@@ -19,22 +33,6 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
-
-def call_history(method: Callable) -> Callable:
-    """store the history of inputs and 
-    outputs for a particular function"""
-    key = method.__qualname__
-    key_input = key + ":inputs"
-    key_output = key + ":outputs"
-    
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        data = method(self, *args, **kwargs)
-        
-        self._redis.lpush(key_input, data)
-        self._redis.rpush(key_output, str(args))
-        return data
-    return wrapper
 
 class Cache:
     """Cache class"""
