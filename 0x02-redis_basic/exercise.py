@@ -33,6 +33,12 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+def replay(fn: Callable):
+    key = fn.__qualname__
+    r = redis.Redis()
+    count = int(r.get(key))
+    print(f"{key} was called {count} times")
+        
 
 class Cache:
     """Cache class"""
@@ -67,3 +73,10 @@ class Cache:
         """automatically parametrize Cache.get with the
         correct conversion function"""
         return self.get(key, lambda d: int(d))
+
+
+cache = Cache()
+cache.store("foo")
+cache.store("bar")
+cache.store(42)
+replay(cache.store)
