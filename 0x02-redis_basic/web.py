@@ -11,7 +11,7 @@ def get_page(url: str) -> str:
     and returns it"""
     key = f"count:{url}"
     r = redis.Redis()
-    count = r.incr(key)
+    r.incr(key)
     # checks if result already cached
     cached = r.get(f"{url}")
     if cached:
