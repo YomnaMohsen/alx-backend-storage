@@ -21,7 +21,7 @@ def track_pages(method: Callable) -> Callable:
         if cached:
             return cached.decode("utf-8")
         response = method(url)
-        r.set(f"{url}", response, 10)
+        r.setex(f"{url}", 10, response)
         return response
     return wrapper
 
