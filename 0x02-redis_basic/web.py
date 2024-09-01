@@ -16,6 +16,6 @@ def get_page(url: str) -> str:
     cached = r.get(f"{url}")
     if cached:
         return cached.decode("utf-8")
-    resp = requests.get(url)
-    r.set(f"{url}", resp.text, 10)
-    return resp.text
+    resp = requests.get(url).text
+    r.set(f"{url}", resp, 10)
+    return resp
