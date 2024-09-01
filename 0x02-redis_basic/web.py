@@ -6,15 +6,16 @@ import requests
 from typing import Callable
 
 
+r = redis.Redis()
+
+
 def track_pages(method: Callable) -> Callable:
     """track how many times a particular URL
     was accessed in the key "count:{url}"""
 
     @wraps(method)
     def wrapper(url: str) -> str:
-        key = f"count:{url}"
-        r = redis.Redis()
-        r.incr(key)
+        r.incr(f"count:{url}")
         # checks if result already cached
         cached = r.get(f"{url}")
         if cached:
