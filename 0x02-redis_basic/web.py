@@ -6,8 +6,8 @@ import requests
 
 
 def get_page(url: str) -> str:
-    """uses the requests module 
-    to obtain the HTML content of a particular URL 
+    """uses the requests module
+    to obtain the HTML content of a particular URL
     and returns it"""
     key = "count:{url}"
     r = redis.Redis()
@@ -19,6 +19,3 @@ def get_page(url: str) -> str:
     resp = requests.get(url)
     r.set("{url}", resp, 10)
     return resp.text
-
-
-get_page('http://slowwly.robertomurray.co.uk')
