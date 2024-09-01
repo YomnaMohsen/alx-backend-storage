@@ -37,10 +37,11 @@ def count_calls(method: Callable) -> Callable:
 
 
 def replay(fn: Callable):
+    """display the history of calls of a particular function"""
     key = fn.__qualname__
     r = redis.Redis()
     count = int(r.get(key))
-    print(f"{key} was called {count} times")
+    print(f"{key} was called {count} times:")
     list1 = r.lrange("{}:inputs".format(key), 0, -1)
     list2 = r.lrange("{}:outputs".format(key), 0, -1)
     for (item1, item2) in (zip(list1, list2)):
