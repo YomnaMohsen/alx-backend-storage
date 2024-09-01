@@ -11,7 +11,7 @@ def track_pages(method: Callable) -> Callable:
     was accessed in the key "count:{url}"""
 
     @wraps(method)
-    def wrapper(url):
+    def wrapper(url: str) -> str:
         key = f"count:{url}"
         r = redis.Redis()
         r.incr(key)
@@ -21,13 +21,13 @@ def track_pages(method: Callable) -> Callable:
             return cached.decode("utf-8")
         response = method(url)
         r.set(f"{url}", response, 10)
-        return response  
+        return response
     return wrapper
 
 
 @track_pages
 def get_page(url: str) -> str:
     """ obtain the HTML content of
-    a particular URL and returns it"""  
-    resp = requests.get(url).text
-    return resp
+    a particular URL and returns it"""
+    resp = requests.get(url)
+    return resp.text
