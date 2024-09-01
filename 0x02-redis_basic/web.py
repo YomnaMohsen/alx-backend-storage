@@ -19,5 +19,3 @@ def get_page(url: str) -> str:
     resp = requests.get(url)
     r.set(f"{url}", resp.text, 10)
     return resp.text
-    
-get_page('http://google.com')
