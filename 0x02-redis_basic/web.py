@@ -3,19 +3,31 @@
 import redis
 from functools import wraps
 import requests
+from typing import Callable
 
 
+def track_pages(method: Callable) -> Callable:
+    """track how many times a particular URL
+    was accessed in the key "count:{url}"""
+
+    @wraps(method)
+    def wrapper(url):
+        key = f"count:{url}"
+        r = redis.Redis()
+        r.incr(key)
+        # checks if result already cached
+        cached = r.get(f"{url}")
+        if cached:
+            return cached.decode("utf-8")
+        response = method(url)
+        r.set(f"{url}", response, 10)
+        return response  
+    return wrapper
+
+
+@track_pages
 def get_page(url: str) -> str:
-    """uses the requests module
-    to obtain the HTML content of a particular URL
-    and returns it"""
-    key = f"count:{url}"
-    r = redis.Redis()
-    r.incr(key)
-    # checks if result already cached
-    cached = r.get(f"{url}")
-    if cached:
-        return cached.decode("utf-8")
+    """ obtain the HTML content of
+    a particular URL and returns it"""  
     resp = requests.get(url).text
-    r.set(f"{url}", resp, 10)
     return resp
