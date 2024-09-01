@@ -5,21 +5,23 @@ from typing import Union, Callable
 import uuid
 from functools import wraps
 
+
 def call_history(method: Callable) -> Callable:
-    """store the history of inputs and 
+    """store the history of inputs and
     outputs for a particular function"""
     key = method.__qualname__
     key_input = key + ":inputs"
     key_output = key + ":outputs"
-    
+
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         data = method(self, *args, **kwargs)
-        
+
         self._redis.rpush(key_input, str(args))
         self._redis.rpush(key_output, data)
         return data
     return wrapper
+
 
 def count_calls(method: Callable) -> Callable:
     """decorator that takes a single method
@@ -33,12 +35,18 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def replay(fn: Callable):
     key = fn.__qualname__
     r = redis.Redis()
     count = int(r.get(key))
     print(f"{key} was called {count} times")
-        
+    list1 = r.lrange("{}:inputs".format(key), 0, -1)
+    list2 = r.lrange("{}:outputs".format(key), 0, -1)
+    for (item1, item2) in (zip(list1, list2)):
+        print("{}(*{}) -> {}".format(key, item1.decode("utf-8"),
+                                     item2.decode("utf-8")))
+
 
 class Cache:
     """Cache class"""
@@ -73,10 +81,3 @@ class Cache:
         """automatically parametrize Cache.get with the
         correct conversion function"""
         return self.get(key, lambda d: int(d))
-
-
-cache = Cache()
-cache.store("foo")
-cache.store("bar")
-cache.store(42)
-replay(cache.store)
