@@ -7,10 +7,11 @@ if __name__ == "__main__":
     """provides some statstics about nginx logs"""
     
     client = MongoClient()
-    tlogs = client.logs.nginx
-    countlogs = tlogs.count_documents({})
-    print(f"{countlogs} logs")
-    methods = ["GET", "POST", "PATCH", "DELETE"]
+    databs = client.logs
+    tlogs = databs.nginx
+    logs = tlogs.count_documents({})
+    print(f"{logs} logs")
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     print("Methods:")
     for method in methods:
         logs = tlogs.count_documents({"method": method})
