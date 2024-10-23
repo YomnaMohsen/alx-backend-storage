@@ -4,6 +4,8 @@ from pymongo import MongoClient
 
 
 if __name__ == "__main__":
+    """provides some statstics about nginx logs"""
+    
     client = MongoClient()
     tlogs = client.logs.nginx
     countlogs = tlogs.count_documents({})
