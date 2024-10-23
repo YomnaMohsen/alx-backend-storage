@@ -8,16 +8,10 @@ if __name__ == "__main__":
     t_logs = client.logs.nginx
     count_logs = t_logs.count_documents({})
     print(f"{count_logs} logs")
+    methods = ["GET", "POST", "PATCH", "DELETE"]
     print("Methods:")
-    get_logs = t_logs.count_documents({"method": "GET"})
-    print(f"\tmethod GET: {get_logs}")
-    post_logs = t_logs.count_documents({"method": "POST"})
-    print(f"\tmethod POST: {post_logs}")
-    put_logs = t_logs.count_documents({"method": "PUT"})
-    print(f"\tmethod PUT: {put_logs}")
-    patch_logs = t_logs.count_documents({"method": "PATCH"})
-    print(f"\tmethod PATCH: {patch_logs}")
-    delete_logs = t_logs.count_documents({"method": "DELETE"})
-    print(f"\tmethod DELTE: {delete_logs}")
+    for method in methods:
+        logs = t_logs.count_documents({"method": method})
+        print(f"\tmethod {method}: {logs}")
     st_logs = t_logs.count_documents({"method": "GET", "path": "/status"})
     print(f"{st_logs} status check")
